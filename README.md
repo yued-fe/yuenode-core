@@ -1,5 +1,7 @@
 # yuenode-core
 
+> 文档可见: [yuenode-core文档](https://yued-fe.github.io/yuenode-core/)
+
 ## 使用 npm 包
 
 ### 调用函数启动
