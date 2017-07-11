@@ -1,39 +1,53 @@
-# yuenode-core
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
 
-## 使用 npm 包
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
 
-### 调用函数启动
+<body>
 
-```js
-require('yuenode-core')({启动配置对象});
-```
+<div id="main">
 
-### 命令行启动
+    <h1 class="page-title">Home</h1>
 
-直接调用 yuenode-core 命令，即可启动当前目录下的 yuenode.config.js ；或你可以制定配置文件启动：
+    
 
-```bash
-yuenode-core "配置文件路径"
-```
 
-## 单独使用 modules 包
 
-所有的 middleware 和 router 的使用方法都是
+    
 
-```js
-require('middleware or router')({启动配置对象});
-```
 
-## 配置文件
+    <h3> </h3>
 
-配置文件由 yuenodeConf（对象）、middlewares（数组）、routers（数组）三个部分组成。
 
-### yuenodeConf
 
-yuenodeConf 对象为框架机启动所需信息，具体项目陈列如下：
 
-```js
-yuenodeConf: {
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h1>yuenode-core</h1><h2>使用 npm 包</h2><h3>调用函数启动</h3><pre class="prettyprint source lang-js"><code>require('yuenode-core')({启动配置对象});</code></pre><h3>命令行启动</h3><p>直接调用 yuenode-core 命令，即可启动当前目录下的 yuenode.config.js ；或你可以制定配置文件启动：</p>
+<pre class="prettyprint source lang-bash"><code>yuenode-core &quot;配置文件路径&quot;</code></pre><h2>单独使用 modules 包</h2><p>所有的 middleware 和 router 的使用方法都是</p>
+<pre class="prettyprint source lang-js"><code>require('middleware or router')({启动配置对象});</code></pre><h2>配置文件</h2><p>配置文件由 yuenodeConf（对象）、middlewares（数组）、routers（数组）三个部分组成。</p>
+<h3>yuenodeConf</h3><p>yuenodeConf 对象为框架机启动所需信息，具体项目陈列如下：</p>
+<pre class="prettyprint source lang-js"><code>yuenodeConf: {
     // NODE服务项目别名
     NODE_SITE: 'm',
     // 当前Node服务环境
@@ -62,15 +76,8 @@ yuenodeConf: {
     static_server_cgi: '/api/v2/setData',
     // 新静态化接口，复用动态路由，使用则注意在动态路由加入static字段，后端post请求动态路由，不需要传body数据，不使用此静态化接口改为空字符串即可
     static_dynamic_router: '/api/setStatic'
-}
-```
-
-### middlewares
-
-middlewares 数组为框架机需要挂载的中间件，配置形式为 {name: '',options: {}}, 其中 name 为 middleware 文件夹下模块名称，options 为启动所需配置对象。如果需要使用其他中间件（例如自己扩展），可以直接在配置文件中启用，示例如下：
-
-```js
-middlewares: [
+}</code></pre><h3>middlewares</h3><p>middlewares 数组为框架机需要挂载的中间件，配置形式为 {name: '',options: {}}, 其中 name 为 middleware 文件夹下模块名称，options 为启动所需配置对象。如果需要使用其他中间件（例如自己扩展），可以直接在配置文件中启用，示例如下：</p>
+<pre class="prettyprint source lang-js"><code>middlewares: [
     // 简繁体转换
     {
         name: 'characterConversion',
@@ -80,15 +87,8 @@ middlewares: [
     },
     // 个人编写的中间件
     require('path/to/middleware')({启动配置对象}),
-]
-```
-
-### routers
-
-routers 数组为框架机需要挂载的路由，配置形式为 {name:'',options:{}} , 其中 name 为 router 文件夹下路由名称，options 为启动所需配置对象。如果需要使用其他路由（例如自己扩展），可以直接在配置文件中启用，示例如下：
-
-```js
-routers: [
+]</code></pre><h3>routers</h3><p>routers 数组为框架机需要挂载的路由，配置形式为 {name:'',options:{}} , 其中 name 为 router 文件夹下路由名称，options 为启动所需配置对象。如果需要使用其他路由（例如自己扩展），可以直接在配置文件中启用，示例如下：</p>
+<pre class="prettyprint source lang-js"><code>routers: [
     // 模版渲染路由
     {
         name: 'dynamicRouter',
@@ -136,32 +136,15 @@ routers: [
     },
     // 个人编写的路由
     require('path/to/router')({启动配置对象}),
-]
-```
-
-## 扩展
-
-现有框架机中间件或者路由如果不能满足需求，可以自由进行扩展。
-
-### 中间件
-
-中间件模块的形式为一个接收一个配置对象、返回 generator 函数的函数，示例如下：
-
-```js
-'use strict';
+]</code></pre><h2>扩展</h2><p>现有框架机中间件或者路由如果不能满足需求，可以自由进行扩展。</p>
+<h3>中间件</h3><p>中间件模块的形式为一个接收一个配置对象、返回 generator 函数的函数，示例如下：</p>
+<pre class="prettyprint source lang-js"><code>'use strict';
 
 module.exports = (opt) => function* favicon(next) {
     this.body = opt.message;
     yield next;
-};
-```
-
-### 路由
-
-路由模块的形式为一个接收一个配置对象、返回路由的函数，示例如下：
-
-```js
-'use strict';
+};</code></pre><h3>路由</h3><p>路由模块的形式为一个接收一个配置对象、返回路由的函数，示例如下：</p>
+<pre class="prettyprint source lang-js"><code>'use strict';
 
 const router = require('koa-router')();
 module.exports = (opt) => {
@@ -169,35 +152,14 @@ module.exports = (opt) => {
         this.body = opt.message;
     })
     return router;
-};
-```
-
-## 现有模块
-
-### dynamicRouter
-
-因为有些项目有多域名的情况，所以首先会将动态路由变为 path.host.config 的形式，可以支持多域名的情况。收到客户端请求后根据 path 去寻找相应的域名下的路由配置，取得 views 模板，向后端发送 cgi 取得数据，cgi 返回不为 200/301/302，则发生对应错误。返回 200 但 code 不为 0 则发生 400 错误。
-
-### addEjsRender
-
-提供 ejs 渲染能力，通过调用 this.render(view, content) 进行渲染；在模板渲染时跳过 <script type="text/ejs-template"></script> 标签中的 <% %> 编译，但依旧会编译其中的 <%% %>，然后返回客户端供客户端使用。
-
-### characterConversion
-
-如果开启了简繁体转换，则会根据 cookie 中的 lang 字段判断简繁体，如果 lang 为 zht，则会将内容转换为繁体输出到客户端。
-
-### errorHandler
-
-发生错误时，如果模板文件根目录中存在有 error/{状态码}.html（如 error 文件夹下 404.html），则渲染对应状态码的页面，否则会渲染普通 error 页面。
-
-寻找顺序为：模板文件根目录中对应域名文件夹下 error/{状态码}.html 页面 => 模板文件根目录 error/{状态码}.html 页面 => 模板文件根目录中对应域名文件夹下 error.html 页面 => 模板文件根目录 error.html 页面 => 框架机自带 error.html 页面。顺序寻找，找到即渲染。
-
-为兼容已有项目，请注意 error.html 页面与 error 文件夹为平级。以上为强约定，不需要配置。
-
-pro 环境可以通过 url 添加 ?__yuenode_error_show=666 来显示错误信息。
-
-```js
-/**
+};</code></pre><h2>现有模块</h2><h3>dynamicRouter</h3><p>因为有些项目有多域名的情况，所以首先会将动态路由变为 path.host.config 的形式，可以支持多域名的情况。收到客户端请求后根据 path 去寻找相应的域名下的路由配置，取得 views 模板，向后端发送 cgi 取得数据，cgi 返回不为 200/301/302，则发生对应错误。返回 200 但 code 不为 0 则发生 400 错误。</p>
+<h3>addEjsRender</h3><p>提供 ejs 渲染能力，通过调用 this.render(view, content) 进行渲染；在模板渲染时跳过 <script type="text/ejs-template"></script> 标签中的 &lt;% %&gt; 编译，但依旧会编译其中的 &lt;%% %&gt;，然后返回客户端供客户端使用。</p>
+<h3>characterConversion</h3><p>如果开启了简繁体转换，则会根据 cookie 中的 lang 字段判断简繁体，如果 lang 为 zht，则会将内容转换为繁体输出到客户端。</p>
+<h3>errorHandler</h3><p>发生错误时，如果模板文件根目录中存在有 error/{状态码}.html（如 error 文件夹下 404.html），则渲染对应状态码的页面，否则会渲染普通 error 页面。</p>
+<p>寻找顺序为：模板文件根目录中对应域名文件夹下 error/{状态码}.html 页面 =&gt; 模板文件根目录 error/{状态码}.html 页面 =&gt; 模板文件根目录中对应域名文件夹下 error.html 页面 =&gt; 模板文件根目录 error.html 页面 =&gt; 框架机自带 error.html 页面。顺序寻找，找到即渲染。</p>
+<p>为兼容已有项目，请注意 error.html 页面与 error 文件夹为平级。以上为强约定，不需要配置。</p>
+<p>pro 环境可以通过 url 添加 ?__yuenode_error_show=666 来显示错误信息。</p>
+<pre class="prettyprint source lang-js"><code>/**
  * 完整顺序示例目录结构
  */
 views
@@ -225,34 +187,16 @@ views
   code                      // [String] statusCode
   msg                       // [String] 错误描述信息
   stack                     // [String] 错误堆栈信息
-}
-```
-
-### dynamicRouter
-
-可以通过传入配置项 getRequestIP 函数进行请求地址的修改，例如进行负载均衡。要注意 getRequestIP 应为 generator 函数。
-
-可以通过传入配置项 getHeader 函数进行请求 header 的修改，可以自由注入后端请求需要的参数。
-
-可以通过传入配置项 getRenderData 函数进行模板渲染数据的修改，可以自由注入模板渲染需要的参数。
-
-### staticRouter
-
-静态化一律由后端 post 请求进行发起，旧有接口需要将页面所需 data 全部 post 过来，新接口则可以复用模板渲染的路由，可以直接 post 请求模板渲染的路由 path，只要在模板渲染的路由中配置好相应的 static 字段即可。
-
-收到后端请求后，取得对应 path 的路由配置，取得 views 模板，从请求 body 中（新接口则向后端发送请求）获得数据，渲染完成后保存在 static 配置的文件路径中。
-
-如果生成静态文件成功，后端则后收到 statusCode 为 200、body.code 为 0 的回应。否则 body.msg 为相应的原因。
-
-可以通过传入配置项 getRequestIP 函数进行请求地址的修改，例如进行负载均衡。要注意 getRequestIP 应为 generator 函数。
-
-可以通过传入配置项 getHeader 函数进行请求 header 的修改，可以自由注入后端请求需要的参数。
-
-可以通过传入配置项 getRenderData 函数进行模板渲染数据的修改，可以自由注入模板渲染需要的参数。
-
-## 框架机配置实例
-```js
-'use strict';
+}</code></pre><h3>dynamicRouter</h3><p>可以通过传入配置项 getRequestIP 函数进行请求地址的修改，例如进行负载均衡。要注意 getRequestIP 应为 generator 函数。</p>
+<p>可以通过传入配置项 getHeader 函数进行请求 header 的修改，可以自由注入后端请求需要的参数。</p>
+<p>可以通过传入配置项 getRenderData 函数进行模板渲染数据的修改，可以自由注入模板渲染需要的参数。</p>
+<h3>staticRouter</h3><p>静态化一律由后端 post 请求进行发起，旧有接口需要将页面所需 data 全部 post 过来，新接口则可以复用模板渲染的路由，可以直接 post 请求模板渲染的路由 path，只要在模板渲染的路由中配置好相应的 static 字段即可。</p>
+<p>收到后端请求后，取得对应 path 的路由配置，取得 views 模板，从请求 body 中（新接口则向后端发送请求）获得数据，渲染完成后保存在 static 配置的文件路径中。</p>
+<p>如果生成静态文件成功，后端则后收到 statusCode 为 200、body.code 为 0 的回应。否则 body.msg 为相应的原因。</p>
+<p>可以通过传入配置项 getRequestIP 函数进行请求地址的修改，例如进行负载均衡。要注意 getRequestIP 应为 generator 函数。</p>
+<p>可以通过传入配置项 getHeader 函数进行请求 header 的修改，可以自由注入后端请求需要的参数。</p>
+<p>可以通过传入配置项 getRenderData 函数进行模板渲染数据的修改，可以自由注入模板渲染需要的参数。</p>
+<h2>框架机配置实例</h2><pre class="prettyprint source lang-js"><code>'use strict';
 
 const dateformat = require('dateformat');
 const cookies = require('cookie');
@@ -436,7 +380,7 @@ module.exports = {
                 getRenderData: (body, ctx) => {
                     // 将业务中较常使用到的信息作为通用信息抛给前端业务方使用
                     body.YUE = Object.assign(body.YUE || {}, stateInfo , {
-                        pageUpdateTime: dateformat((new Date()).getTime(), "yyyy-mm-dd,HH:MM:ss"),
+                        pageUpdateTime: dateformat((new Date()).getTime(), &quot;yyyy-mm-dd,HH:MM:ss&quot;),
                     });
 
                     return body;
@@ -444,10 +388,30 @@ module.exports = {
             }
         }
     ]
-};
-```
+};</code></pre><h2>3.0 TODO</h2><ol>
+<li>host 修正，nginx 到 框架机，框架机到 php 都不改 host，用 x-host 代替。</li>
+<li>合并所有配置到 server.js</li>
+</ol></article>
+    </section>
 
-## 3.0 TODO
 
-0. host 修正，nginx 到 框架机，框架机到 php 都不改 host，用 x-host 代替。
-0. 合并所有配置到 server.js
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-index.html">index</a></li><li><a href="module-middleware_addEjsRender.html">middleware/addEjsRender</a></li><li><a href="module-middleware_addOldRenderInfo.html">middleware/addOldRenderInfo</a></li><li><a href="module-middleware_characterConversion.html">middleware/characterConversion</a></li><li><a href="module-middleware_errorHandler.html">middleware/errorHandler</a></li><li><a href="module-middleware_favicon.html">middleware/favicon</a></li><li><a href="module-middleware_logger.html">middleware/logger</a></li><li><a href="module-middleware_monitorBack.html">middleware/monitorBack</a></li><li><a href="module-router_bothRouter.html">router/bothRouter</a></li><li><a href="module-router_dynamicRouter.html">router/dynamicRouter</a></li><li><a href="module-router_staticRouter.html">router/staticRouter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Jul 11 2017 14:57:29 GMT+0800 (CST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
