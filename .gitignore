@@ -1,0 +1,13 @@
+# Node Modules (use `npm install` to generate these)
+node_modules
+
+# OS X Junk
+.DS_Store
+npm-debug.log
+
+# Not-Needed System Files
+*.swp
+*.bak
+.svn
+*.log
+
