@@ -35,7 +35,7 @@ function parseRouterMap(routerMap) {
             reqPath = k.substr(pos);
 
             // 如果views没有补全域名,则补全域名
-            if (!!v.views && v.views.startsWith('/') && !v.views.includes(domain)) {
+            if (!!v.views && v.views.startsWith('/') && !v.views.startsWith('/' + domain)) {
                 v.views = domain + v.views;
             }
         }
