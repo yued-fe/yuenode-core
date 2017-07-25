@@ -252,6 +252,42 @@ views
 
 可以通过传入配置项 getRenderData 函数进行模板渲染数据的修改，可以自由注入模板渲染需要的参数。
 
+### vueRouter
+
+vueRouter 为 vue 提供 ssr 的支持。请参考以下相关格式来配置 server-entry 和以及应用入口：
+
+```js
+import { app, router, store } from './app';
+
+export default context => {
+  return new Promise((resolve, reject) => {
+
+    const { url } = context;
+    const fullPath = router.resolve(url).route.fullPath;
+    if (fullPath !== url) {
+      reject({ redirect: fullPath });
+    }
+
+    router.push(url);
+
+    router.onReady(() => {
+      const matchedComponents = router.getMatchedComponents();
+      if (!matchedComponents.length) {
+        reject({ status: 404 });
+      }
+
+      Promise.all(matchedComponents.map(component => {
+        return component.preFetch && component.preFetch(store);
+      })).then(() => {
+        context.state = store.state;
+        resolve(app);
+      }).catch(reject);
+
+    }, reject);
+  });
+};
+```
+
 ## 框架机配置实例
 ```js
 'use strict';
