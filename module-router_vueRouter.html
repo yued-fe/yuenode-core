@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>yuenode-core: Module: router/staticRouter</title>
+    <title>yuenode-core: Module: router/vueRouter</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: router/staticRouter</h1>
+    <h1 class="page-title">Module: router/vueRouter</h1>
 
     
 
@@ -38,7 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description">加载静态路由</div>
+            <div class="description">加载vue ssr路由</div>
         
 
         
@@ -121,30 +121,7 @@
 
         <tr>
             
-                <td class="name"><code>staticServerOn</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">是否开启静态化</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>staticFileRoot</code></td>
+                <td class="name"><code>templatePath</code></td>
             
 
             <td class="type">
@@ -160,14 +137,14 @@
 
             
 
-            <td class="description last">静态化文件存放根目录</td>
+            <td class="description last">模板文件路径，模板需要添加<!--vue-ssr-outlet--></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>staticPath</code></td>
+                <td class="name"><code>bundlePath</code></td>
             
 
             <td class="type">
@@ -183,14 +160,37 @@
 
             
 
-            <td class="description last">静态化接口路径</td>
+            <td class="description last">bundle 文件路径</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>staticRouterMap</code></td>
+                <td class="name"><code>manifestPath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">manifest 文件路径</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>renderContext</code></td>
             
 
             <td class="type">
@@ -206,122 +206,7 @@
 
             
 
-            <td class="description last">静态化routerMap</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>dynamicStaticPath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">新静态化接口路径</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>dynamicRouterMap</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">动态routerMap</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>getRequestIP</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">获取请求地址方法，返回ip或host用于发送后端请求，参数 ctx，注意为 generator 函数</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>getHeader</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">处理请求header方法，返回header用于发送后端请求，参数 原header,ctx</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>getRenderData</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">处理渲染data方法，返回data用于渲染，参数 原data,ctx</td>
+            <td class="description last">渲染上下文</td>
         </tr>
 
     
@@ -369,7 +254,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="router_staticRouter.js.html">router/staticRouter.js</a>, <a href="router_staticRouter.js.html#line3">line 3</a>
+        <a href="router_vueRouter.js.html">router/vueRouter.js</a>, <a href="router_vueRouter.js.html#line3">line 3</a>
     </li></ul></dd>
     
 

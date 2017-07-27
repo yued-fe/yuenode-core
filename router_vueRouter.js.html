@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>yuenode-core: Source: middleware/characterConversion.js</title>
+    <title>yuenode-core: Source: router/vueRouter.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: middleware/characterConversion.js</h1>
+    <h1 class="page-title">Source: router/vueRouter.js</h1>
 
     
 
@@ -29,41 +29,69 @@
             <pre class="prettyprint source linenums"><code>'use strict';
 
 /**
- * 简繁体转换，根据 cookie中的 lang 字段判断
- * @module middleware/characterConversion
- *
- * @param {object}  opt                  启动参数对象
- * @param {boolean} opt.ConversionOn     是否开启简繁体转换
+ * 加载vue ssr路由
+ * @module router/vueRouter
+ * 
+ * @param {object}      opt                     启动参数对象
+ * @param {string}      opt.templatePath        模板文件路径，模板需要添加&lt;!--vue-ssr-outlet-->
+ * @param {string}      opt.bundlePath          bundle 文件路径
+ * @param {string}      opt.manifestPath        manifest 文件路径
+ * @param {object}      opt.renderContext       渲染上下文
  */
 
-const cookies = require('cookie');
-const Chinese = require('chinese-s2t');
+const fs = require('fs');
+const router = require('koa-router')();
+const { createBundleRenderer } = require('vue-server-renderer');
 
-module.exports = (opt) => function* characterConversion(next) {
-    
-    const userHeader = this.header;
-    const userCookie = !!userHeader.cookie ? userHeader.cookie : '';
-    const cookieObj = cookies.parse(userCookie);
-    
-    // 默认为简体中文，以防没有cookie的情况下isZht为undefined
-    let isZht = false;
+module.exports = function addVueRouter(opt) {
 
-    // 如果在站点设置中开启简繁体转换功能，则通过请求cookie中的 lang 字段判断简繁体
-    if (opt.conversionOn) {
-        if (!!userCookie) {
-            // 如果有cookie且标记为繁体，则渲染为繁体
-            isZht = (cookieObj.lang &amp;&amp; cookieObj.lang === 'zht') ? true : false;
-        }
+    const template = fs.readFileSync(opt.templatePath, 'utf8');
+    const bundle = require(opt.bundlePath);
+
+    const renderOption = {
+        runInNewContext: false,
+        template,
+    };
+
+    if (opt.manifestPath) {
+        renderOption.clientManifest = require(opt.manifestPath);
     }
 
-    yield next;
+    const bundleRenderer = createBundleRenderer(bundle, renderOption);
 
-    // 如果开启转换且为繁体，则转换
-    if (isZht) {
-        this.body = Chinese.s2t(this.body);
-        this.appendLog('characterConversion: Traditional');
-    }
+    const renderer = context => {
+        return new Promise((resolve, reject) => {
+            bundleRenderer.renderToString(context, (err, html) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve(html);
+            });
+        });
+    };
+
+    router.get('*', function* () {
+        const context = Object.assign(opt.renderContext || {}, {
+            url: this.url
+        });
+        yield renderer(context).then(html => {
+            this.body = html;
+        }).catch(err => {
+            if (err.redirect) {
+                return this.redirect(err.redirect);
+            } else if (err.status === 404) {
+                this.status = err.status;
+            } else {
+                throw new Error(err.msg || 'Vue render error');
+            }
+        });
+    });
+
+    return router;
 };
+
+
+
 </code></pre>
         </article>
     </section>

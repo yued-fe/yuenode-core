@@ -43,7 +43,10 @@
 
 
     <section>
-        <article><h1>yuenode-core</h1><h2>使用 npm 包</h2><h3>调用函数启动</h3><pre class="prettyprint source lang-js"><code>require('yuenode-core')({启动配置对象});</code></pre><h3>命令行启动</h3><p>直接调用 yuenode-core 命令，即可启动当前目录下的 yuenode.config.js ；或你可以制定配置文件启动：</p>
+        <article><h1>yuenode-core</h1><blockquote>
+<p>文档可见: <a href="https://yued-fe.github.io/yuenode-core/">yuenode-core文档</a></p>
+</blockquote>
+<h2>使用 npm 包</h2><h3>调用函数启动</h3><pre class="prettyprint source lang-js"><code>require('yuenode-core')({启动配置对象});</code></pre><h3>命令行启动</h3><p>直接调用 yuenode-core 命令，即可启动当前目录下的 yuenode.config.js ；或你可以制定配置文件启动：</p>
 <pre class="prettyprint source lang-bash"><code>yuenode-core &quot;配置文件路径&quot;</code></pre><h2>单独使用 modules 包</h2><p>所有的 middleware 和 router 的使用方法都是</p>
 <pre class="prettyprint source lang-js"><code>require('middleware or router')({启动配置对象});</code></pre><h2>配置文件</h2><p>配置文件由 yuenodeConf（对象）、middlewares（数组）、routers（数组）三个部分组成。</p>
 <h3>yuenodeConf</h3><p>yuenodeConf 对象为框架机启动所需信息，具体项目陈列如下：</p>
@@ -158,7 +161,7 @@ module.exports = (opt) => {
 <h3>errorHandler</h3><p>发生错误时，如果模板文件根目录中存在有 error/{状态码}.html（如 error 文件夹下 404.html），则渲染对应状态码的页面，否则会渲染普通 error 页面。</p>
 <p>寻找顺序为：模板文件根目录中对应域名文件夹下 error/{状态码}.html 页面 =&gt; 模板文件根目录 error/{状态码}.html 页面 =&gt; 模板文件根目录中对应域名文件夹下 error.html 页面 =&gt; 模板文件根目录 error.html 页面 =&gt; 框架机自带 error.html 页面。顺序寻找，找到即渲染。</p>
 <p>为兼容已有项目，请注意 error.html 页面与 error 文件夹为平级。以上为强约定，不需要配置。</p>
-<p>pro 环境可以通过 url 添加 ?__yuenode_error_show=666 来显示错误信息。</p>
+<p>pro 环境可以通过 url 添加错误显示 query 密码来显示错误信息。</p>
 <pre class="prettyprint source lang-js"><code>/**
  * 完整顺序示例目录结构
  */
@@ -181,7 +184,7 @@ views
                             // ⑤ 框架机自带 error 页
 
 /**
- * error 页面渲染错误信息，pro 环境可以通过 url 添加 ?__yuenode_error_show=666 来显示错误信息
+ * error 页面渲染错误信息，pro 环境可以通过 url 添加错误显示 query 密码来显示错误信息
  */
 {
   code                      // [String] statusCode
@@ -196,7 +199,36 @@ views
 <p>可以通过传入配置项 getRequestIP 函数进行请求地址的修改，例如进行负载均衡。要注意 getRequestIP 应为 generator 函数。</p>
 <p>可以通过传入配置项 getHeader 函数进行请求 header 的修改，可以自由注入后端请求需要的参数。</p>
 <p>可以通过传入配置项 getRenderData 函数进行模板渲染数据的修改，可以自由注入模板渲染需要的参数。</p>
-<h2>框架机配置实例</h2><pre class="prettyprint source lang-js"><code>'use strict';
+<h3>vueRouter</h3><p>vueRouter 为 vue 提供 ssr 的支持。请参考以下相关格式来配置 server-entry 和以及应用入口：</p>
+<pre class="prettyprint source lang-js"><code>import { app, router, store } from './app';
+
+export default context => {
+  return new Promise((resolve, reject) => {
+
+    const { url } = context;
+    const fullPath = router.resolve(url).route.fullPath;
+    if (fullPath !== url) {
+      reject({ redirect: fullPath });
+    }
+
+    router.push(url);
+
+    router.onReady(() => {
+      const matchedComponents = router.getMatchedComponents();
+      if (!matchedComponents.length) {
+        reject({ status: 404 });
+      }
+
+      Promise.all(matchedComponents.map(component => {
+        return component.preFetch && component.preFetch(store);
+      })).then(() => {
+        context.state = store.state;
+        resolve(app);
+      }).catch(reject);
+
+    }, reject);
+  });
+};</code></pre><h2>框架机配置实例</h2><pre class="prettyprint source lang-js"><code>'use strict';
 
 const dateformat = require('dateformat');
 const cookies = require('cookie');
@@ -237,7 +269,9 @@ module.exports = {
                     envType: envType || '',
                     staticConf: serverConf.static || {},
                     defaultSearch: { 'keywords': '' }
-                }
+                },
+                // pro 环境错误显示 query
+                errorMsgPassword: '_y_error_show'
             }
         },
         // favicon
@@ -402,13 +436,13 @@ module.exports = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-index.html">index</a></li><li><a href="module-middleware_addEjsRender.html">middleware/addEjsRender</a></li><li><a href="module-middleware_addOldRenderInfo.html">middleware/addOldRenderInfo</a></li><li><a href="module-middleware_characterConversion.html">middleware/characterConversion</a></li><li><a href="module-middleware_errorHandler.html">middleware/errorHandler</a></li><li><a href="module-middleware_favicon.html">middleware/favicon</a></li><li><a href="module-middleware_logger.html">middleware/logger</a></li><li><a href="module-middleware_monitorBack.html">middleware/monitorBack</a></li><li><a href="module-router_bothRouter.html">router/bothRouter</a></li><li><a href="module-router_dynamicRouter.html">router/dynamicRouter</a></li><li><a href="module-router_staticRouter.html">router/staticRouter</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-index.html">index</a></li><li><a href="module-middleware_addEjsRender.html">middleware/addEjsRender</a></li><li><a href="module-middleware_addOldRenderInfo.html">middleware/addOldRenderInfo</a></li><li><a href="module-middleware_characterConversion.html">middleware/characterConversion</a></li><li><a href="module-middleware_errorHandler.html">middleware/errorHandler</a></li><li><a href="module-middleware_favicon.html">middleware/favicon</a></li><li><a href="module-middleware_logger.html">middleware/logger</a></li><li><a href="module-middleware_monitorBack.html">middleware/monitorBack</a></li><li><a href="module-router_bothRouter.html">router/bothRouter</a></li><li><a href="module-router_dynamicRouter.html">router/dynamicRouter</a></li><li><a href="module-router_staticRouter.html">router/staticRouter</a></li><li><a href="module-router_vueRouter.html">router/vueRouter</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Jul 11 2017 14:57:29 GMT+0800 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Thu Jul 27 2017 18:25:22 GMT+0800 (CST)
 </footer>
 
 <script> prettyPrint(); </script>
