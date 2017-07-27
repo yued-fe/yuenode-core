@@ -17,7 +17,7 @@ const { createBundleRenderer } = require('vue-server-renderer');
 
 module.exports = function addVueRouter(opt) {
 
-    const template = fs.readFileSync(opt.templatePath, 'utf-8');
+    const template = fs.readFileSync(opt.templatePath, 'utf8');
     const bundle = require(opt.bundlePath);
 
     const renderOption = {
