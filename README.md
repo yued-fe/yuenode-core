@@ -196,7 +196,7 @@ module.exports = (opt) => {
 
 为兼容已有项目，请注意 error.html 页面与 error 文件夹为平级。以上为强约定，不需要配置。
 
-pro 环境可以通过 url 添加 ?__yuenode_error_show=666 来显示错误信息。
+pro 环境可以通过 url 添加错误显示 query 密码来显示错误信息。
 
 ```js
 /**
@@ -221,7 +221,7 @@ views
                             // ⑤ 框架机自带 error 页
 
 /**
- * error 页面渲染错误信息，pro 环境可以通过 url 添加 ?__yuenode_error_show=666 来显示错误信息
+ * error 页面渲染错误信息，pro 环境可以通过 url 添加错误显示 query 密码来显示错误信息
  */
 {
   code                      // [String] statusCode
@@ -331,7 +331,9 @@ module.exports = {
                     envType: envType || '',
                     staticConf: serverConf.static || {},
                     defaultSearch: { 'keywords': '' }
-                }
+                },
+                // pro 环境错误显示 query
+                errorMsgPassword: '_y_error_show'
             }
         },
         // favicon

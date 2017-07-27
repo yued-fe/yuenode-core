@@ -39,7 +39,9 @@ module.exports = {
                     envType: envType || '',
                     staticConf: serverConf.static || {},
                     defaultSearch: { 'keywords': '' }
-                }
+                },
+                // pro 环境错误显示 query
+                errorMsgPassword: '_y_error_show'
             }
         },
         // favicon
