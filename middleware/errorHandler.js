@@ -4,8 +4,9 @@
  * 错误处理中间件，将所有抛出的错误在此统一处理
  * @module middleware/errorHandler
  *
- * @param {object}  opt                 启动参数对象
- * @param {object}  opt.errorInfo       渲染错误页所需信息
+ * @param {object}  opt                     启动参数对象
+ * @param {object}  opt.errorInfo           渲染错误页所需信息
+ * @param {object}  opt.errorMsgPassword    显示错误信息 query 密码，例如为 error_show， 则在 url 后加入 ?error_show 就会显示错误信息
  */
       
 const path = require('path');
@@ -13,7 +14,7 @@ const fs = require('fs');
 
 const utils = require('../lib/utils.js');
 
-module.exports = ({errorInfo}) => function* onerror(next) {
+module.exports = (opt) => function* onerror(next) {
     try {
         yield next;
 
@@ -50,7 +51,7 @@ module.exports = ({errorInfo}) => function* onerror(next) {
         }
 
         /**
-         * 默认渲染错误数据，pro 环境可以通过 url 添加 ?__yuenode_error_show=666 来显示错误信息
+         * 默认渲染错误数据，pro 环境可以通过 url 添加显示错误信息 query 密码来显示错误信息
          * @member errorinfo
          * @inner
          * @const
@@ -64,11 +65,11 @@ module.exports = ({errorInfo}) => function* onerror(next) {
             msg: 'Something went wrong.',
             stack: ''
         };
-        if (global.envType !== 'pro' || this.query.__yuenode_error_show == 666) {
+        if (global.envType !== 'pro' || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
             body.msg = err.message;
             body.stack = err.stack;
         }
-        body = typeof errorInfo === 'object' ? Object.assign(body, errorInfo) : body;
+        body = typeof opt.errorInfo === 'object' ? Object.assign(body, opt.errorInfo) : body;
 
         // 渲染状态码错误页
         try {
