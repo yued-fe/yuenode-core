@@ -1,6 +1,6 @@
 'use strict';
 
 const yuenode = require('../index.js');
-const config = require('./config/vueTestConf.js');
+const config = require('./config/defaultConfig.js');
 
 yuenode(config);

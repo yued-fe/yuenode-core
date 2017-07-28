@@ -31,7 +31,7 @@ module.exports = (opt) => function* characterConversion(next) {
     yield next;
 
     // 如果开启转换且为繁体，则转换
-    if (isZht) {
+    if (this.body && this.response.header['content-type'].includes('html') && isZht) {
         this.body = Chinese.s2t(this.body);
         this.appendLog('characterConversion: Traditional');
     }

@@ -28,14 +28,14 @@ require('middleware or router')({启动配置对象});
 
 ## 配置文件
 
-配置文件由 yuenodeConf（对象）、middlewares（数组）、routers（数组）三个部分组成。
+配置文件由 config（对象）、middlewares（数组）、routers（数组）三个部分组成。
 
-### yuenodeConf
+### config
 
-yuenodeConf 对象为框架机启动所需信息，具体项目陈列如下：
+config 对象为框架机启动所需信息，具体项目陈列如下：
 
 ```js
-yuenodeConf: {
+config: {
     // NODE服务项目别名
     NODE_SITE: 'm',
     // 当前Node服务环境
@@ -315,7 +315,7 @@ const stateInfo = {
 };
 
 module.exports = {
-    yuenodeConf: siteConf,
+    config: siteConf,
     middlewares: [
         // 请求记录中间件
         {

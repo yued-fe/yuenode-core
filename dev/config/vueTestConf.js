@@ -5,7 +5,7 @@
  * 动态静态路由都需要的渲染资料
  */
 
-const yuenodeConf = {
+const config = {
     // NODE服务项目别名
     NODE_SITE: 'm',
     // 当前Node服务环境
@@ -14,7 +14,7 @@ const yuenodeConf = {
     port: 8080,
 };
 module.exports = {
-    yuenodeConf,
+    config,
     middlewares: [
         // 请求记录中间件
         {
@@ -27,7 +27,7 @@ module.exports = {
             options: {
                 // 渲染错误页要用的数据
                 errorInfo: {
-                    envType: yuenodeConf.ENV_TYPE || '',
+                    envType: config.ENV_TYPE || '',
                 }
             }
         },

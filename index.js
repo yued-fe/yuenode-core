@@ -5,7 +5,7 @@
  * @module index
  * 
  * @param {object} opt              启动参数对象
- * @param {object} opt.yuenodeConf  站点配置对象
+ * @param {object} opt.config       站点配置对象
  * @param {array}  opt.middlewares  中间件数组
  * @param {array}  opt.routers      路由数组
  */
@@ -17,12 +17,12 @@ const dateformat = require('dateformat');
 
 module.exports = function yuenode(opt = {}) {
 
-    const yuenodeConf = opt.yuenodeConf || {},
+    const config = opt.config || {},
         middlewares = opt.middlewares || [],
         routers = opt.routers || [];
 
-    // 全局 envType
-    global.envType = yuenodeConf.ENV_TYPE || '';
+    // 全局 config
+    global.config = config || {};
 
     // 挂载中间件
     middlewares.forEach((m) => {
@@ -51,13 +51,13 @@ module.exports = function yuenode(opt = {}) {
     });
 
     // 启动监听
-    app.listen(yuenodeConf.port, () => {
+    app.listen(config.port, () => {
         console.log(
             chalk.green('\n = = = = = = = = = = = = = = = = = = = = = =\n'),
             chalk.green('Reboot at: '), chalk.red(dateformat((new Date()).getTime(), 'yyyy-mm-dd HH:MM:ss')), '\n',
-            chalk.green('Server NODE_SITE: '), chalk.blue(yuenodeConf.NODE_SITE), '\n',
-            chalk.green('Server ENV_TYPE: '), chalk.blue(yuenodeConf.ENV_TYPE), '\n',
-            chalk.green('Yuenode Server is listening on port: '), chalk.bold(yuenodeConf.port), '\n',
+            chalk.green('Server NODE_SITE: '), chalk.blue(config.NODE_SITE), '\n',
+            chalk.green('Server ENV_TYPE: '), chalk.blue(config.ENV_TYPE), '\n',
+            chalk.green('Yuenode Server is listening on port: '), chalk.bold(config.port), '\n',
             chalk.green('= = = = = = = = = = = = = = = = = = = = = =')
         );
     });
