@@ -38,7 +38,7 @@ module.exports = (opt) => function* addOldRenderInfo(next) {
             // 静态文件配置
             pageUpdateTime: dateFormat((new Date()).getTime(), "yyyy-mm-dd,HH:MM:ss"),
             staticConf: (opt.staticConf || ''),
-            envType: global.envType || ''
+            envType: global.config.ENV_TYPE || ''
         }, opt.extendsLoader);
 
         return oldRender.call(this, view, data);

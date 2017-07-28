@@ -28,14 +28,14 @@ require('middleware or router')({启动配置对象});
 
 ## 配置文件
 
-配置文件由 yuenodeConf（对象）、middlewares（数组）、routers（数组）三个部分组成。
+配置文件由 config（对象）、middlewares（数组）、routers（数组）三个部分组成。
 
-### yuenodeConf
+### config
 
-yuenodeConf 对象为框架机启动所需信息，具体项目陈列如下：
+config 对象为框架机启动所需信息，具体项目陈列如下：
 
 ```js
-yuenodeConf: {
+config: {
     // NODE服务项目别名
     NODE_SITE: 'm',
     // 当前Node服务环境
@@ -252,6 +252,42 @@ views
 
 可以通过传入配置项 getRenderData 函数进行模板渲染数据的修改，可以自由注入模板渲染需要的参数。
 
+### vueRouter
+
+vueRouter 为 vue 提供 ssr 的支持。请参考以下相关格式来配置 server-entry 和以及应用入口：
+
+```js
+import { app, router, store } from './app';
+
+export default context => {
+  return new Promise((resolve, reject) => {
+
+    const { url } = context;
+    const fullPath = router.resolve(url).route.fullPath;
+    if (fullPath !== url) {
+      reject({ redirect: fullPath });
+    }
+
+    router.push(url);
+
+    router.onReady(() => {
+      const matchedComponents = router.getMatchedComponents();
+      if (!matchedComponents.length) {
+        reject({ status: 404 });
+      }
+
+      Promise.all(matchedComponents.map(component => {
+        return component.preFetch && component.preFetch(store);
+      })).then(() => {
+        context.state = store.state;
+        resolve(app);
+      }).catch(reject);
+
+    }, reject);
+  });
+};
+```
+
 ## 框架机配置实例
 ```js
 'use strict';
@@ -279,7 +315,7 @@ const stateInfo = {
 };
 
 module.exports = {
-    yuenodeConf: siteConf,
+    config: siteConf,
     middlewares: [
         // 请求记录中间件
         {
