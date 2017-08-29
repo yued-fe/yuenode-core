@@ -8,7 +8,7 @@
  * @param {string}      opt.templatePath        模板文件路径，模板需要添加<!--vue-ssr-outlet-->
  * @param {string}      opt.bundlePath          bundle 文件路径
  * @param {string}      opt.manifestPath        manifest 文件路径
- * @param {object}      opt.renderContext       渲染上下文
+ * @param {function}    opt.handleRequestIP     请求地址 例如使用L5
  */
 
 const fs = require('fs');
@@ -43,6 +43,9 @@ module.exports = function addVueRouter(opt) {
     };
 
     router.get('*', function* () {
+        if (opt.handleRequestIP) {
+            yield opt.handleRequestIP(this);
+        }
         const context = Object.assign(opt.renderContext || {}, {
             url: this.url
         });
