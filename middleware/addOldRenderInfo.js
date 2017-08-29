@@ -27,7 +27,7 @@ module.exports = (opt) => function* addOldRenderInfo(next) {
     const oldRender = this.render;
 
     // 将业务中较常使用到的 COOKIE,UA,URL 等信息作为通用信息抛给前端业务方使用
-    this.render = function (view, data) {
+    this.render = (view, data) => {
         data = Object.assign(data, {
             CLIENT_URL: userClientUrl,
             cookie: userCookie,

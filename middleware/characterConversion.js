@@ -5,7 +5,7 @@
  * @module middleware/characterConversion
  *
  * @param {object}  opt                  启动参数对象
- * @param {boolean} opt.ConversionOn     是否开启简繁体转换
+ * @param {boolean} opt.conversionOn     是否开启简繁体转换
  */
 
 const cookies = require('cookie');
@@ -26,13 +26,20 @@ module.exports = (opt) => function* characterConversion(next) {
             // 如果有cookie且标记为繁体，则渲染为繁体
             isZht = (cookieObj.lang && cookieObj.lang === 'zht') ? true : false;
         }
+        // 如果为繁体，则转换
+        if (isZht) {
+            const oldRender = this.render;
+
+            // 将业务中较常使用到的 COOKIE,UA,URL 等信息作为通用信息抛给前端业务方使用
+            this.render = (view, data) => {
+                let html = oldRender.call(this, view, data);
+                html = Chinese.s2t(html);
+                this.appendLog('characterConversion: Traditional');
+
+                return html;
+            };
+        }
     }
 
     yield next;
-
-    // 如果开启转换且为繁体，则转换
-    if (this.body && this.response.header['content-type'].includes('html') && isZht) {
-        this.body = Chinese.s2t(this.body);
-        this.appendLog('characterConversion: Traditional');
-    }
 };
