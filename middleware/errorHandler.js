@@ -19,14 +19,13 @@ module.exports = (opt) => function* onerror(next) {
         yield next;
 
         // 404
-        if (this.status === 404) {
+        if (this.status === 404 && !this.response.headerSent) {
             let err = new Error('Not Found');
             err.status = 404;
             err.stack = 'Not Found';
             throw err;
         }
     } catch (err) {
-        
         // ENOENT support
         if (err.code === 'ENOENT') {
             err.status = 404;

@@ -5,9 +5,8 @@
  * @module router/vueRouter
  * 
  * @param {object}      opt                     启动参数对象
- * @param {string}      opt.configPath          nuxt config 文件路径
+ * @param {string}      opt.serverConfigs       config 数组
  * @param {function}    opt.handleRequestIP     请求地址 例如使用L5
- * @param {function}    opt.webpackPablicPath   webpack pablicPath
  */
 
 const router = require('koa-router')();
@@ -15,29 +14,48 @@ const { Nuxt } = require('nuxt');
 
 module.exports = function addNuxtRouter(opt) {
 
-    const config = require(opt.configPath);
+    opt.serverConfigs.forEach(config => {
+        const nuxt = new Nuxt(config.nuxtConfig);
 
-    const nuxt = new Nuxt(config);
+        // 替换各环境 pablicPath
+        const publicPath = config.publicPath;
+        if (publicPath) {
+            nuxt.showOpen = function() {
+                const resources = nuxt.renderer.resources;
 
-    // let __webpack_public_path__;
-    // global.webpackPablicPath = opt.webpackPablicPath || '//' + global.config.ENV_TYPE + 'qidian.gtimg.com'
-    // __webpack_public_path__ = __webpack_public_path__.startsWith('//') ?
-    // '//' + global.config.ENV_TYPE + __webpack_public_path__.substr(2) :
-    // global.config.ENV_TYPE + __webpack_public_path__;
+                resources.clientManifest.publicPath = publicPath;
+                const serverBundle = resources.serverBundle.files['server-bundle.js'];
+                resources.serverBundle.files['server-bundle.js'] = serverBundle.replace(/__webpack_require__\.p = "[^"]+"/, `__webpack_require__.p = "${publicPath}"`);
 
-    const renderer = ctx => {
-        return new Promise((resolve, reject) => {
-            nuxt.render(ctx.req, ctx.res, promise => {
-                promise.then(resolve).catch(reject);
+                setImmediate(() => {
+                    const originRenderToString = nuxt.renderer.bundleRenderer.renderToString;
+                    nuxt.renderer.bundleRenderer.renderToString = function(context) {
+                        return originRenderToString.apply(this, arguments).then((d) => {
+                            context.nuxt.publicPath = publicPath;
+                            return d;
+                        });
+                    };
+                });
+            };
+        }
+
+        // 根据前缀起多个 path router
+        let routerBase = '';
+        if (config.nuxtConfig.router && config.nuxtConfig.router.base) {
+            routerBase = config.nuxtConfig.router.base.endsWith('/') ? config.nuxtConfig.router.base : config.nuxtConfig.router.base + '/';
+        }
+        router.get(routerBase + '*', function*() {
+            if (opt.handleRequestIP) {
+                yield opt.handleRequestIP(this, config);
+            }
+            yield new Promise((resolve, reject) => {
+                this.res.on('close', resolve);
+                this.res.on('finish', resolve);
+                nuxt.render(this.req, this.res, promise => {
+                    promise.then(resolve).catch(reject);
+                });
             });
         });
-    };
-
-    router.get(config.router.base + '*', function*() {
-        if (opt.handleRequestIP) {
-            yield opt.handleRequestIP(this);
-        }
-        yield renderer(this);
     });
 
     return router;
