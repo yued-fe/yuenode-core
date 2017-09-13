@@ -11,6 +11,13 @@
  * @param {function}    opt.handleRequestIP     请求地址 例如使用L5
  */
 
+// 依赖
+// "vue": "^2.4.2",
+// "vue-router": "^2.7.0",
+// "vue-server-renderer": "^2.4.2",
+// "vuex": "^2.3.1",
+// "vuex-router-sync": "^4.2.0"
+
 const fs = require('fs');
 const router = require('koa-router')();
 const { createBundleRenderer } = require('vue-server-renderer');
