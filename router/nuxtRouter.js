@@ -20,23 +20,21 @@ module.exports = function addNuxtRouter(opt) {
         // 替换各环境 pablicPath
         const publicPath = config.publicPath;
         if (publicPath) {
-            nuxt.showOpen = function() {
-                const resources = nuxt.renderer.resources;
-
+            nuxt.renderer.plugin('resourcesLoaded', function(resources) {
                 resources.clientManifest.publicPath = publicPath;
                 const serverBundle = resources.serverBundle.files['server-bundle.js'];
                 resources.serverBundle.files['server-bundle.js'] = serverBundle.replace(/__webpack_require__\.p = "[^"]+"/, `__webpack_require__.p = "${publicPath}"`);
+            });
 
-                setImmediate(() => {
-                    const originRenderToString = nuxt.renderer.bundleRenderer.renderToString;
-                    nuxt.renderer.bundleRenderer.renderToString = function(context) {
-                        return originRenderToString.apply(this, arguments).then((d) => {
-                            context.nuxt.publicPath = publicPath;
-                            return d;
-                        });
-                    };
-                });
-            };
+            nuxt.renderer.plugin('ready', function(renderer) {
+                const originRenderToString = renderer.bundleRenderer.renderToString;
+                renderer.bundleRenderer.renderToString = function(context) {
+                    return originRenderToString.apply(this, arguments).then((d) => {
+                        context.nuxt.publicPath = publicPath;
+                        return d;
+                    });
+                };
+            });
         }
 
         // 根据前缀起多个 path router

@@ -1,6 +1,6 @@
 {
   "name": "yuenode-core",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "author": "shilei",
   "description": "A Nodejs framework, Collection of middlewares and routers, core of yuenode.",
   "bin": {

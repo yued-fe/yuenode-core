@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const L5 = require('../lib/co-l5.js');
 
 const config = {
     // NODE服务项目别名
@@ -12,7 +13,7 @@ const config = {
     // 是否开启L5 taf平台适用
     l5_on: false,
     // server.js
-    nuxtConfigs: [path.join(__dirname, '../test/dist/server/booklist-universal/server.js')]
+    nuxtConfigs: ['/Users/shilei/qidian-git/qidian-activity-proj/dist/server/v-tpl-create-booklist/server.js']
 };
 module.exports = {
     config,
@@ -48,23 +49,29 @@ module.exports = {
                     return require(elem)[config.ENV_TYPE];
                 }),
                 handleRequestIP: function* (ctx, nodeConf) {
-                    const axios = require('axios');
-                    axios.defaults.timeout = 5000;
+                    const headers = Object.assign({
+                        'x-host': ctx.host,
+                        'x-url': ctx.url,
+                    }, ctx.header, {
+                        host: nodeConf.cgi.domain || ctx.host
+                    });
 
                     /**
                      * 如果在站点配置中开启L5，则通过L5获得后台服务IP或者域名，否则默认使用配置文件中的ip地址
                      * 由于L5需要服务器环境支持(依赖底层库),本地调试不载入L5模块防止出错。
                      */
-                    axios.defaults.headers.host = nodeConf.cgi.domain;
+                    let baseURL;
                     if (global.config.l5_on && nodeConf.cgi.L5 && nodeConf.cgi.L5.enable) {
-                        const L5 = require('../lib/co-l5.js');
-
-                        let reqHost = yield L5.getAddr(ctx, nodeConf.cgi.L5);
-                        axios.defaults.baseURL = reqHost ? reqHost : nodeConf.cgi.ip;
-                        ctx.appendLog('L5 got IP: ' + reqHost + ', use ' + axios.defaults.baseURL);
+                        baseURL = yield L5.getAddr(ctx, nodeConf.cgi.L5);
+                        baseURL = baseURL ? baseURL : nodeConf.cgi.ip;
                     } else {
-                        axios.defaults.baseURL = nodeConf.cgi.ip;
+                        baseURL = nodeConf.cgi.ip;
                     }
+                    baseURL = baseURL.startsWith('http') ? baseURL : 'http://' + baseURL;
+
+                    ctx.req.getReqDefaults = () => new Promise((resolve, reject) => {
+                        resolve({ headers, baseURL });
+                    });
                 }
             }
         },
