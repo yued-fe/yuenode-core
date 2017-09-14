@@ -69,9 +69,7 @@ module.exports = {
                     }
                     baseURL = baseURL.startsWith('http') ? baseURL : 'http://' + baseURL;
 
-                    ctx.req.getReqDefaults = () => new Promise((resolve, reject) => {
-                        resolve({ headers, baseURL });
-                    });
+                    ctx.req.axiosDefaults = { headers, baseURL };
                 }
             }
         },

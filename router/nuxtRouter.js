@@ -9,6 +9,7 @@
  * @param {function}    opt.handleRequestIP     请求地址 例如使用L5
  */
 
+const url = require('url');
 const router = require('koa-router')();
 const { Nuxt } = require('nuxt');
 
@@ -43,6 +44,8 @@ module.exports = function addNuxtRouter(opt) {
             routerBase = config.nuxtConfig.router.base.endsWith('/') ? config.nuxtConfig.router.base : config.nuxtConfig.router.base + '/';
         }
         router.get(routerBase + '*', function*() {
+            this.req.url = url.parse(this.req.url).path;
+
             if (opt.handleRequestIP) {
                 yield opt.handleRequestIP(this, config);
             }

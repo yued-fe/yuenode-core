@@ -1,6 +1,6 @@
 {
   "name": "yuenode-core",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "author": "shilei",
   "description": "A Nodejs framework, Collection of middlewares and routers, core of yuenode.",
   "bin": {
@@ -16,6 +16,7 @@
     "node": ">=6.0"
   },
   "dependencies": {
+    "@tencent/cl5": "^1.0.18",
     "axios": "^0.16.2",
     "bluebird": "^3.5.0",
     "chalk": "^1.1.3",
@@ -29,7 +30,7 @@
     "koa-bodyparser": "^2.5.0",
     "koa-router": "^5.4.0",
     "mkdirp": "^0.5.1",
-    "nuxt": "^1.0.0-rc8",
+    "nuxt": "^1.0.0-rc11",
     "thunkify": "^2.1.2",
     "url": "^0.11.0"
   }
