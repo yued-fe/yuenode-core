@@ -51,7 +51,7 @@ module.exports = (opt) => function* onerror(next) {
         }
 
         /**
-         * 默认渲染错误数据，pro 环境可以通过 url 添加显示错误信息 query 密码来显示错误信息
+         * 默认渲染错误数据，ol 环境可以通过 url 添加显示错误信息 query 密码来显示错误信息
          * @member errorinfo
          * @inner
          * @const
@@ -65,7 +65,7 @@ module.exports = (opt) => function* onerror(next) {
             msg: 'Something went wrong.',
             stack: ''
         };
-        if (global.config.ENV_TYPE !== 'pro' || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
+        if (global.config.ENV_TYPE !== 'ol' || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
             body.msg = err.message;
             body.stack = err.stack;
         }

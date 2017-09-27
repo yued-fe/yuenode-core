@@ -51,13 +51,14 @@ module.exports = function yuenode(opt = {}) {
     });
 
     // 启动监听
-    app.listen(config.port, () => {
+    app.listen(config.PORT, config.IP, () => {
         console.log(
             chalk.green('\n = = = = = = = = = = = = = = = = = = = = = =\n'),
             chalk.green('Reboot at: '), chalk.red(dateformat((new Date()).getTime(), 'yyyy-mm-dd HH:MM:ss')), '\n',
             chalk.green('Server NODE_SITE: '), chalk.blue(config.NODE_SITE), '\n',
             chalk.green('Server ENV_TYPE: '), chalk.blue(config.ENV_TYPE), '\n',
-            chalk.green('Yuenode Server is listening on port: '), chalk.bold(config.port), '\n',
+            chalk.green('Server IP: '), chalk.blue(config.IP), '\n',
+            chalk.green('Yuenode Server is listening on port: '), chalk.bold(config.PORT), '\n',
             chalk.green('= = = = = = = = = = = = = = = = = = = = = =')
         );
     });
