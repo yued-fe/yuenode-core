@@ -100,7 +100,7 @@ const configRouter = (routeConf, opt) => function* renderRoutersHandler() {
 
         // 处理结果
         body = utils.handleResponce(result, this);
-        if (!body) {return false;}
+        if (!body) { return false; }
 
     // 没有配置cgi则不向后端发送数据
     } else {

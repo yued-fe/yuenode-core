@@ -37,7 +37,9 @@ module.exports = function (settings) {
         throw new Error('Set ejsRender needs settings.root');
     }
 
-    settings.root = path.resolve(process.cwd(), settings.root);
+    if (!path.isAbsolute(settings.root)) {
+        throw new Error('Settings.root needs to be absolute path');
+    }
 
     settings = Object.assign(defaultSettings,settings);
 
@@ -52,7 +54,8 @@ module.exports = function (settings) {
         // 调用原生 ejs.renderFile 方法
         return ejs.renderFile(viewPath, options, (err, str) => {
             if (err) {
-                err.message = 'ejs render failed: \n' + err.message;
+                err.message = 'render error';
+                err.stack = err.message;
                 throw err;
             }
             return str;

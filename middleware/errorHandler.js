@@ -61,11 +61,10 @@ module.exports = (opt) => function* onerror(next) {
          */
         let body = {
             code: this.status,
-            msg: 'Something went wrong.',
+            msg: err.message,
             stack: ''
         };
         if (global.config.ENV_TYPE !== 'pro' || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
-            body.msg = err.message;
             body.stack = err.stack;
         }
         body = typeof opt.errorInfo === 'object' ? Object.assign(body, opt.errorInfo) : body;

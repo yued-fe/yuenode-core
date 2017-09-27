@@ -8,11 +8,9 @@
  * @param {boolean}     opt.staticServerOn       是否开启静态化
  * @param {string}      opt.staticFileRoot       静态化文件存放根目录
  * @param {string}      opt.staticPath           静态化接口路径
- * @param {object}      opt.staticRouterMap      静态化routerMap
- * @param {string}      opt.dynamicStaticPath    新静态化接口路径
- * @param {object}      opt.dynamicRouterMap     动态routerMap
+ * @param {object}      opt.routerMap            动态routerMap
  * @param {function}    opt.getRequestIP         获取请求地址方法，返回ip或host用于发送后端请求，参数 ctx，注意为 generator 函数
- * @param {function}    opt.getHeader            处理请求header方法，返回header用于发送后端请求，参数 原header,ctx
+ * @param {function}    opt.getHeader            处理请求header方法，返回header用于发送后端请求，参数 ctx
  * @param {function}    opt.getRenderData        处理渲染data方法，返回data用于渲染，参数 原data,ctx
  */
 
@@ -39,13 +37,6 @@ module.exports = function addDynamicRouter(opt) {
     function setRouter(prefix, routerMap, configFn) {
         for (let route of Object.keys(routerMap)) {
             let routeConf = routerMap[route];
-            // routerConf 为字符串形式
-            if (typeof routeConf === 'string') {
-                routeConf = {
-                    views: routeConf,
-                    static: routeConf
-                };
-            }
             // 如果动态路由配置了静态化，则启用静态化
             if (!!routeConf.static) {
                 // 检查每个路由配置的文件夹是否存在
@@ -67,38 +58,8 @@ module.exports = function addDynamicRouter(opt) {
         }
     }
 
-    // 原有静态化服务
-    if (!!opt.staticPath) {
-
-        /***
-         * 静态化处理函数
-         * @param  {object} routeConf           路由配置
-         * @param  {string} filePath, fileName  要生成的文件路径和文件名
-         */
-        const configRouter = (routeConf, filePath, fileName) => function* staticRoutersHandler() {
-            // log
-            this.appendLog('routerConf: ' + JSON.stringify(routeConf));
-
-            // 生成静态页面
-            const writeResult = yield utils.writeStaticFile(this, routeConf.views, filePath, fileName, this.request.body);
-
-            // log
-            this.appendLog(`staticMsg: Create ${[filePath, fileName].join('/')} success`);
-
-            // 返回结果
-            this.body = {
-                code: 0,
-                msg: `Create ${[filePath, fileName].join('/')} success`
-            };
-        };
-
-        // 设置路由
-        setRouter(opt.staticPath, opt.staticRouterMap, configRouter);
-
-    }
-
     // 新静态化接口，复用动态路由
-    if (!!opt.dynamicStaticPath) {
+    if (!!opt.staticPath) {
 
         /***
          * 静态化处理函数
@@ -145,7 +106,7 @@ module.exports = function addDynamicRouter(opt) {
             }
 
             // 生成静态页面
-            const writeResult = yield utils.writeStaticFile(this, routeConf.views, filePath, fileName, body);
+            const writeResult = yield utils.writeStaticFile(this, routeConf.views, filePath, fileName, opt.getRenderData ? opt.getRenderData(body, this) : body);
 
             // log
             this.appendLog(`staticMsg: Create ${[filePath, fileName].join('/')} success`);
@@ -158,7 +119,7 @@ module.exports = function addDynamicRouter(opt) {
         };
 
         // 设置路由
-        setRouter(opt.dynamicStaticPath, opt.dynamicRouterMap,  configRouter);
+        setRouter(opt.dynamicStaticPath, opt.routerMap,  configRouter);
     }
 
     return router;
