@@ -65,7 +65,7 @@ module.exports = (opt) => function* onerror(next) {
             msg: 'Something went wrong.',
             stack: ''
         };
-        if (global.config.ENV_TYPE !== 'ol' || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
+        if (global.config.ENV_TYPE !== 'ol' || global.config.ENV_TYPE !== 'pro' ||(opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
             body.msg = err.message;
             body.stack = err.stack;
         }
