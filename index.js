@@ -17,8 +17,12 @@ const dateformat = require('dateformat');
 
 module.exports = function yuenode(opt = {}) {
 
-    const middlewares = opt.middlewares || [],
+    const config = opt.config || {},
+        middlewares = opt.middlewares || [],
         routers = opt.routers || [];
+
+    // 全局 config
+    global.config = config || {};
 
     // 挂载中间件
     middlewares.forEach((m) => {
@@ -47,14 +51,13 @@ module.exports = function yuenode(opt = {}) {
     });
 
     // 启动监听
-    app.listen(process.env.PORT, process.env.IP, () => {
+    app.listen(config.PORT, config.IP, () => {
         console.log(
             chalk.green('\n = = = = = = = = = = = = = = = = = = = = = =\n'),
             chalk.green('Reboot at: '), chalk.red(dateformat(Date.now(), 'yyyy-mm-dd HH:MM:ss')), '\n',
-            chalk.green('Server SITE_NAME: '), chalk.blue(opt.SITE_NAME), '\n',
-            chalk.green('Server ENV_TYPE: '), chalk.blue(process.env.QD_TSF_ENV), '\n',
-            chalk.green('Server IP: '), chalk.blue(process.env.IP), '\n',
-            chalk.green('Yuenode Server is listening on PORT: '), chalk.bold(process.env.PORT), '\n',
+            chalk.green('Server ENV_TYPE: '), chalk.blue(config.ENV_TYPE), '\n',
+            chalk.green('Server IP: '), chalk.blue(config.IP), '\n',
+            chalk.green('Yuenode Server is listening on port: '), chalk.bold(config.PORT), '\n',
             chalk.green('= = = = = = = = = = = = = = = = = = = = = =')
         );
     });

@@ -41,29 +41,9 @@ config: {
     // 当前Node服务环境
     ENV_TYPE: 'local',
     // 服务端口
-    port: 10500,
-    // 是否开启L5 taf平台适用
-    l5_on: false,
-
-    // 项目配置文件夹地址
-    path: '/path/config',
-    // 配置文件名
-    server_conf_file: 'server',
-    // 动态路由映射文件或文件夹名，如果是文件夹默认加载文件夹内的index
-    routermap_file: 'routes',
-    // extends文件或文件夹名，如果是文件夹默认加载文件夹内的index，没有index的话加载loader
-    extends_file: 'extends',
-    // 是否开启简繁体转换功能
-    character_conversion: true,
-
-    // 是否开启静态化服务
-    static_server_on: true,
-    // 静态化路由配合文件
-    static_routermap_file: 'static_routermap',
-    // 静态化服务原有后端接口，后端post所有页面数据，不使用此静态化接口改为空字符串即可
-    static_server_cgi: '/api/v2/setData',
-    // 新静态化接口，复用动态路由，使用则注意在动态路由加入static字段，后端post请求动态路由，不需要传body数据，不使用此静态化接口改为空字符串即可
-    static_dynamic_router: '/api/setStatic'
+    PORT: 10500,
+    // 服务IP
+    IP: '127.0.0.1'
 }
 ```
 
@@ -103,21 +83,13 @@ routers: [
                  * 如果在站点配置中开启L5，则通过L5获得后台服务IP或者域名，否则默认使用配置文件中的ip地址
                  * 由于L5需要服务器环境支持(依赖底层库),本地调试不载入L5模块防止出错。
                  */
-                if (siteConf.l5_on) {
-                    const L5 = require('./lib/co-l5.js');
-                    let reqHost = yield L5.getAddr(ctx, serverConf.cgi.L5);
-                    return reqHost ? reqHost : serverConf.cgi.ip;
-                }
-                return serverConf.cgi.ip;
+                const L5 = require('./lib/co-l5.js');
+                let reqHost = yield L5.getAddr(ctx, serverConf.cgi.L5);
+                return reqHost ? reqHost : serverConf.cgi.ip;
             },
             // 注入请求header
             getHeader: (header, ctx) => {
-                return Object.assign({
-                    'x-host': ctx.header['x-host'] ? ctx.header['x-host'] : ctx.host,
-                    'x-url': ctx.url,
-                }, header, {
-                    host: serverConf.cgi.domain || ctx.host
-                });
+                return Object.assign({ 'x-url': ctx.url }, header);
             },
             // 注入渲染数据
             getRenderData: (body, ctx) => {
@@ -178,7 +150,7 @@ module.exports = (opt) => {
 
 ### dynamicRouter
 
-因为有些项目有多域名的情况，所以首先会将动态路由变为 path.host.config 的形式，可以支持多域名的情况。收到客户端请求后根据 path 去寻找相应的域名下的路由配置，取得 views 模板，向后端发送 cgi 取得数据，cgi 返回不为 200/301/302，则发生对应错误。返回 200 但 code 不为 0 则发生 400 错误。
+因为有些项目有多域名的情况，所以首先会将动态路由变为 path.host.config 的形式，可以支持多域名的情况。收到客户端请求后根据 path 去寻找相应的域名下的路由配置，取得 views 模板，向后端发送 cgi 取得数据，cgi 返回不为 200/301/302，则发生对应错误。返回 200 但 code 不为 0 则发生错误。
 
 ### addEjsRender
 
@@ -286,6 +258,37 @@ export default context => {
     }, reject);
   });
 };
+```
+
+### nuxtRouter
+
+nuxtRouter 为使用了 nuxt 框架做 vue ssr 提供支持。配置形式为：
+
+```js
+module.exports = {
+    // dev环境
+    dev: {
+        // nuxt 配置
+        nuxtConfig: {},
+
+        // 受“业务模式”和“webpack打包”限制，需要在配置加上运行时 publicPath
+        publicPath: config.publicPath,
+
+        // 后端请求配置
+        cgi: {
+            // ip 为没有 L5 的情况下请求地址
+            ip: '0.0.0.0:80',
+            // L5 配置
+            L5: {
+                enable: false,
+                conf: {
+                    MODID: 64138113,
+                    CMDID: 524288
+                }
+            }
+        }
+    }
+}
 ```
 
 ## 框架机配置实例

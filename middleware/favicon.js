@@ -19,7 +19,7 @@ module.exports = ({root}) => function* favicon(next) {
     }
 
     if ('GET' !== this.method && 'HEAD' !== this.method) {
-        this.status = 'OPTIONS' === this.method ? 200 : 405;
+        this.status = 'OPTIONS' === this.method ? 204 : 405;
         this.set('Allow', 'GET, HEAD, OPTIONS');
         return;
     }

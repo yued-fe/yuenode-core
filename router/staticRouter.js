@@ -25,8 +25,7 @@ module.exports = function addDynamicRouter(opt) {
     }
 
     // 静态文件根目录
-    let staticRoot =  typeof opt.staticFileRoot === 'string' ? opt.staticFileRoot : opt.staticFileRoot.path;
-    staticRoot = staticRoot.startsWith('/') ? staticRoot : '/' + staticRoot;
+    const staticRoot = opt.staticFileRoot.startsWith('/') ? opt.staticFileRoot : '/' + opt.staticFileRoot;
 
     /***
      * 配置路由
@@ -119,7 +118,7 @@ module.exports = function addDynamicRouter(opt) {
         };
 
         // 设置路由
-        setRouter(opt.dynamicStaticPath, opt.routerMap,  configRouter);
+        setRouter(opt.staticPath, opt.routerMap,  configRouter);
     }
 
     return router;

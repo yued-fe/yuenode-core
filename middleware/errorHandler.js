@@ -64,7 +64,7 @@ module.exports = (opt) => function* onerror(next) {
             msg: err.message,
             stack: ''
         };
-        if (global.config.ENV_TYPE !== 'pro' || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
+        if ((global.config.ENV_TYPE !== 'pro' && global.config.ENV_TYPE !== 'ol') || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
             body.stack = err.stack;
         }
         body = typeof opt.errorInfo === 'object' ? Object.assign(body, opt.errorInfo) : body;

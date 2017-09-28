@@ -38,7 +38,7 @@ module.exports = function (settings) {
     }
 
     if (!path.isAbsolute(settings.root)) {
-        throw new Error('Settings.root needs to be absolute path');
+        settings.root = '/' + settings.root;
     }
 
     settings = Object.assign(defaultSettings,settings);
