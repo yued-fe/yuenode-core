@@ -34,6 +34,7 @@ module.exports = (opt) => function* addOldRenderInfo(next) {
             CLIENT_COOKIE: userCookie,
             CLIENT_UA: JSON.stringify(userUA, null, 4),
             LOCATION: userUrlParse,
+            isZht: (cookieObj.lang && cookieObj.lang === 'zht') ? true : false,
 
             // 静态文件配置
             pageUpdateTime: dateFormat((new Date()).getTime(), "yyyy-mm-dd,HH:MM:ss"),
