@@ -32,7 +32,7 @@ module.exports = (opt) => function* characterConversion(next) {
 
             // 将业务中较常使用到的 COOKIE,UA,URL 等信息作为通用信息抛给前端业务方使用
             this.render = (view, data) => {
-                let html = oldRender.call(this, view, data);
+                let html = oldRender.call(this, view, Object.assign({isZht}, data));
                 html = Chinese.s2t(html);
                 this.appendLog('characterConversion: Traditional');
 
