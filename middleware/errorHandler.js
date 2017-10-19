@@ -14,6 +14,9 @@ const fs = require('fs');
 
 const utils = require('../lib/utils.js');
 
+const errPath = path.join(__dirname, '../views/error.html');
+const errTxt = fs.readFileSync(errPath, 'utf8');
+
 module.exports = (opt) => function* onerror(next) {
     try {
         yield next;
@@ -62,11 +65,10 @@ module.exports = (opt) => function* onerror(next) {
          */
         let body = {
             code: this.status,
-            msg: 'Something went wrong.',
+            msg: err.message,
             stack: ''
         };
         if ((global.config.ENV_TYPE !== 'pro' && global.config.ENV_TYPE !== 'ol') || (opt.errorMsgPassword && Object.keys(this.query).includes(opt.errorMsgPassword))) {
-            body.msg = err.message;
             body.stack = err.stack;
         }
         body = typeof opt.errorInfo === 'object' ? Object.assign(body, opt.errorInfo) : body;
@@ -95,8 +97,6 @@ module.exports = (opt) => function* onerror(next) {
                     this.body = this.render('error', body);
                 } catch (err) {
                     // 没有的话使用框架机中的error页面，不使用render防止是渲染出错
-                    const errPath = path.join(__dirname, '../views/error.html');
-                    let errTxt = fs.readFileSync(errPath, 'utf8');
                     this.body = errTxt
                         .replace('{{code}}', body.code)
                         .replace('{{msg}}', body.msg)
