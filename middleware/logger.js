@@ -14,7 +14,7 @@ module.exports = () => function* logger(next) {
 
     // 添加 log
     this._logItems = [
-        chalk.gray('===== Separator ====='),
+        chalk.white('===== Separator ====='),
         `[${dateformat(start, 'yyyy-mm-dd HH:MM:ss')}] ${this.method} ${this.originalUrl}`,
     ];
 
@@ -27,9 +27,9 @@ module.exports = () => function* logger(next) {
 
     // 返回结果
     this.appendLog(`<-- ${
-        String(this.status).startsWith('2') ?
+        String(this.status).startsWith('2') || String(this.status).startsWith('3') ?
         chalk.green(this.status) : 
-        String(this.status).startsWith('3') ?
+        String(this.status).startsWith('4') ?
         chalk.yellow(this.status) : 
         chalk.red(this.status) 
     } ${(Date.now() - start)/1000}s`);

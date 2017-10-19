@@ -41,7 +41,7 @@ module.exports = (opt) => function* onerror(next) {
         this.status = err.status;
 
         // log
-        this.appendLog(`ERRORMSG: ${err.message}`);
+        this.appendLog(`ERRORMSG: ${err.message === 'Render Error' ? err.stack : err.message }`);
 
         // 静态化错误直接返回
         if (this.method.toUpperCase() === 'POST') {
