@@ -81,8 +81,15 @@ const configRouter = (routeConf, opt) => function* renderRoutersHandler() {
     // 如果配置中有cgi，则向后端请求数据，没有配置cgi则不向后端发送数据
     if (currentConf.cgi) {
 
+        // 判断第二套 L5 配置，兼容用
+        let reqCgi = currentConf.cgi, isL52 = false;
+        if (reqCgi.startsWith('{{L52}}')) {
+            reqCgi = reqCgi.replace('{{L52}}', '');
+            isL52 = true;
+        }
+
         // 取得处理过的cgi请求路径，合并query
-        const cgiUrl = utils.fixCgi(opt.getRequestIP ? yield opt.getRequestIP(this) : this.host, currentConf.cgi, this.query, this.params);
+        const cgiUrl = utils.fixCgi(opt.getRequestIP ? yield opt.getRequestIP(this, isL52) : this.host, reqCgi, this.query, this.params);
 
         // 取得header，根据环境指定后端host,后台根据host来区分后端业务server
         const header = opt.getHeader ? opt.getHeader(this.header, this) : this.header;
