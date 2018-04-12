@@ -81,14 +81,15 @@ module.exports = function addDynamicRouter(opt) {
 
             // 生成静态页面
             const writeResult = yield utils.writeStaticFile(this, routeConf.views, filePath, fileName, this.request.body);
-
+            const resultMsg = writeResult === 304 ? `${[filePath, fileName].join('/')} is not modified` : `Create ${[filePath, fileName].join('/')} success`;
+            
             // log
-            this.appendLog(`staticMsg: Create ${[filePath, fileName].join('/')} success`);
+            this.appendLog(`staticMsg: ${resultMsg}`);
 
             // 返回结果
             this.body = {
                 code: 0,
-                msg: `Create ${[filePath, fileName].join('/')} success`
+                msg: resultMsg
             };
         };
 
@@ -146,14 +147,15 @@ module.exports = function addDynamicRouter(opt) {
 
             // 生成静态页面
             const writeResult = yield utils.writeStaticFile(this, routeConf.views, filePath, fileName, body);
-
+            const resultMsg = writeResult === 304 ? `${[filePath, fileName].join('/')} is not modified` : `Create ${[filePath, fileName].join('/')} success`;
+            
             // log
-            this.appendLog(`staticMsg: Create ${[filePath, fileName].join('/')} success`);
+            this.appendLog(`staticMsg: ${resultMsg}`);
 
             // 返回结果
             this.body = {
                 code: 0,
-                msg: `Create ${[filePath, fileName].join('/')} success`
+                msg: resultMsg
             };
         };
 
