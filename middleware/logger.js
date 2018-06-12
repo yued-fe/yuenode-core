@@ -29,6 +29,6 @@ module.exports = () => function* logger(next) {
 
     // 打印日志
     this.status < 400 || this.status === 404
-        ? console.log(this._logItems.join('\n'));
+        ? console.log(this._logItems.join('\n'))
         : console.error(this._logItems.join('\n'));
 };  
