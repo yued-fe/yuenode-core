@@ -41,7 +41,9 @@ config: {
     // 当前环境
     ENV_TYPE: 'dev',
     IP: process.env.IP,
-    PORT: process.env.PORT
+    PORT: process.env.PORT,
+    // 接口超时时间，非必须
+    timeout: 5000,
 }
 ```
 
