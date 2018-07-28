@@ -20,7 +20,7 @@ const router = require('koa-router')();
 
 const utils = require('../lib/utils.js');
 
-module.exports = function addDynamicRouter(opt) {
+module.exports = function addStaticRouter(opt) {
     // 没开启静态化则直接返回空路由
     if (!opt.staticServerOn) {
         return router;
@@ -146,7 +146,7 @@ module.exports = function addDynamicRouter(opt) {
             }
 
             // 生成静态页面
-            const writeResult = yield utils.writeStaticFile(this, routeConf.views, filePath, fileName, body);
+            const writeResult = yield utils.writeStaticFile(this, routeConf.views, filePath, fileName, opt.getRenderData ? opt.getRenderData(body, this) : body);
             const resultMsg = writeResult === 304 ? `${[filePath, fileName].join('/')} is not modified` : `Create ${[filePath, fileName].join('/')} success`;
             
             // log

@@ -28,7 +28,7 @@ module.exports = () => function* logger(next) {
     this.appendLog(`<-- ${this.status} ${(Date.now() - start)/1000}s`);
 
     // 打印日志
-    this.status < 400 || this.status === 404
+    this.status < 500
         ? console.log(this._logItems.join('\n'))
         : console.error(this._logItems.join('\n'));
 };  
