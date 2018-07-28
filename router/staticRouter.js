@@ -119,14 +119,14 @@ module.exports = function addStaticRouter(opt) {
             if (!!routeConf.cgi) {
 
                 // 判断第二套 L5 配置，兼容用
-                let reqCgi = currentConf.cgi, isL52 = false;
+                let reqCgi = routeConf.cgi, isL52 = false;
                 if (reqCgi.startsWith('{{L52}}')) {
                     reqCgi = reqCgi.replace('{{L52}}', '');
                     isL52 = true;
                 }
 
                 // 取得处理过的cgi请求路径，合并query
-                const cgiUrl = utils.fixCgi(opt.getRequestIP ? yield opt.getRequestIP(this, isL52) : this.host, routeConf.cgi, this.query, this.params);
+                const cgiUrl = utils.fixCgi(opt.getRequestIP ? yield opt.getRequestIP(this, isL52) : this.host, reqCgi, this.query, this.params);
 
                 // 取得header，根据环境指定后端host,后台根据host来区分后端业务server
                 const header = opt.getHeader ? opt.getHeader(this.header, this) : this.header;
