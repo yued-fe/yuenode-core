@@ -23,6 +23,14 @@ module.exports = (opt) => function* addOldRenderInfo(next) {
     const clientHost = !!userHeader['x-host'] ? userHeader['x-host'] : this.host;
     const userClientUrl = this.protocol + '://' + clientHost + this.url;
     const userUrlParse = url.parse(userClientUrl, true, true);
+    if (userUrlParse.query) {
+      const keys = Object.keys(userUrlParse.query)
+      if (keys && keys.length) {
+        keys.forEach((key) => {
+          userUrlParse.query[key] = encodeURI(userUrlParse.query[key])
+        })
+      }
+    }
 
     const oldRender = this.render;
 
