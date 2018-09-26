@@ -27,7 +27,11 @@ module.exports = (opt) => function* addOldRenderInfo(next) {
       const keys = Object.keys(userUrlParse.query)
       if (keys && keys.length) {
         keys.forEach((key) => {
-          userUrlParse.query[key] = encodeURI(userUrlParse.query[key])
+            const newQuery = {}
+            keys.forEach((key) => {
+              newQuery[encodeURI(key)] = encodeURI(userUrlParse.query[key])
+            })
+            userUrlParse.query = newQuery
         })
       }
     }
@@ -37,7 +41,7 @@ module.exports = (opt) => function* addOldRenderInfo(next) {
     // 将业务中较常使用到的 COOKIE,UA,URL 等信息作为通用信息抛给前端业务方使用
     this.render = (view, data) => {
         data = Object.assign(data, {
-            CLIENT_URL: userClientUrl,
+            CLIENT_URL: userUrlParse.href,
             cookie: userCookie,
             CLIENT_COOKIE: userCookie,
             CLIENT_UA: JSON.stringify(userUA, null, 4),
