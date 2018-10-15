@@ -73,6 +73,8 @@ const configRouter = (routeConf, opt) => function* renderRoutersHandler() {
         currentConf = routeConf._;
     }
 
+    if (!currentConf) return false;
+
     // log
     this.appendLog('routerConf: ' + JSON.stringify(currentConf));
 
