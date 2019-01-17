@@ -31,8 +31,14 @@ module.exports = (opt) => function* onerror(next) {
     } catch (err) {
         
         // ENOENT support
-        if (err.code === 'ENOENT') {
+        if (err.code === 'ENOENT' || err.code === 'ENOTFOUND') {
             err.status = 404;
+        }
+        if (err.code === 'ETIMEDOUT') {
+            err.status = 504;
+        }
+        if (err.code === 'ECONNREFUSED') {
+            err.status = 502;
         }
 
         if (typeof err.status !== 'number') {
