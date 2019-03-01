@@ -11,7 +11,7 @@
  */
 
 global.Promise = require('bluebird');
-global.JSON = require('json-bigint');
+global.JSON = require('json-bigint')({ 'storeAsString': true });
 
 const app = require('koa')();
 const dateformat = require('dateformat');
